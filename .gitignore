@@ -29,5 +29,5 @@ npm-debug.log.*
 *.scss.d.ts
 
 # ignore stuff with secrets
-config.json
-keyfile.json
+scripts/config.json
+scripts/keyfile.json

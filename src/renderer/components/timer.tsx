@@ -1,4 +1,5 @@
 import React from 'react';
+import { Flex, Text } from '@fluentui/react-northstar';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
@@ -14,9 +15,9 @@ export default function Timer({
   textToDisplay,
 }: ITimerProps) {
   return (
-    <div>
-      <div>total time: {totalTime}</div>
-      <div>current time: {currentTime}</div>
+    <Flex>
+      <Text>total time: {totalTime}</Text>
+      <Text>current time: {currentTime}</Text>
       <CircularProgressbar
         value={currentTime}
         text={`${textToDisplay}`}
@@ -25,6 +26,6 @@ export default function Timer({
         styles={buildStyles({ textColor: 'black' })}
       />
       ;
-    </div>
+    </Flex>
   );
 }

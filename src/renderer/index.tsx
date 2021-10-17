@@ -1,5 +1,12 @@
 import React from 'react';
-import { render } from 'react-dom';
+import ReactDOM from 'react-dom';
+import { Provider, teamsTheme } from '@fluentui/react-northstar';
+
 import App from './App';
 
-render(<App />, document.getElementById('root'));
+ReactDOM.render(
+  <Provider theme={teamsTheme}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+);

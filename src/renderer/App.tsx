@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button, Flex } from '@fluentui/react-northstar';
 import './App.global.css';
 import Alarm from './components/alarm';
 import Listener from './components/listener';
@@ -73,8 +74,8 @@ export default function App() {
   }, []);
 
   return (
-    <div>
-      <button
+    <Flex>
+      <Button
         onClick={() => {
           const data = '1 minute 5 seconds';
           setListening(false);
@@ -92,7 +93,7 @@ export default function App() {
         }}
       >
         test
-      </button>
+      </Button>
       <Alarm alarming={alarming} />
       <Timer
         totalTime={totalTime}
@@ -100,6 +101,6 @@ export default function App() {
         textToDisplay={timerTextToDisplay}
       />
       <Listener currentSpeech={currentSpeech} listening={listening} />
-    </div>
+    </Flex>
   );
 }

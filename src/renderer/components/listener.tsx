@@ -1,4 +1,5 @@
 import React from 'react';
+import { Flex, Text } from '@fluentui/react-northstar';
 
 interface IListenerProps {
   listening: boolean;
@@ -6,9 +7,9 @@ interface IListenerProps {
 }
 export default function Listener({ listening, currentSpeech }: IListenerProps) {
   return (
-    <div>
-      <div>listening: {listening.toString()}</div>
-      <div>{currentSpeech}</div>
-    </div>
+    <Flex>
+      <Text>listening: {listening.toString()}</Text>
+      <Text>{currentSpeech}</Text>
+    </Flex>
   );
 }

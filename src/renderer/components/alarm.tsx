@@ -1,3 +1,4 @@
+import { Flex, Text } from '@fluentui/react-northstar';
 import React from 'react';
 
 interface IAlarmProps {
@@ -6,8 +7,8 @@ interface IAlarmProps {
 
 export default function Alarm({ alarming }: IAlarmProps) {
   return (
-    <div>
-      <div>alarming: {alarming.toString()}</div>
-    </div>
+    <Flex>
+      <Text>alarming: {alarming.toString()}</Text>
+    </Flex>
   );
 }
