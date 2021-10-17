@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/speech": "^4.9.0",
     "onoff": "^6.0.3",
     "sonus": "^1.0.3"
   }
