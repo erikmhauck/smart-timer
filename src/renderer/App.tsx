@@ -74,7 +74,7 @@ export default function App() {
   }, []);
 
   return (
-    <Flex>
+    <Flex fill column vAlign="center" hAlign="center">
       <Button
         onClick={() => {
           const data = '1 minute 5 seconds';
