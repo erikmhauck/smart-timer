@@ -18,11 +18,12 @@ import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
 
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import activateBuzzer from './buzzer';
 
 let kwsProcess: ChildProcessWithoutNullStreams | null = null;
 let quitting = false;
 let firstRun = false;
+
+const isRPI = process.platform !== 'darwin';
 
 export default class AppUpdater {
   constructor() {
@@ -37,7 +38,9 @@ let mainWindow: BrowserWindow | null = null;
 const startSonus = () => {
   console.log('Starting sonus...');
   // Initilize the keyword spotter
-  kwsProcess = spawn('node', ['./sonus.js'], { detached: false });
+  kwsProcess = spawn('node', ['./scripts/sonus.js'], {
+    detached: false,
+  });
   // Handel messages from node
   kwsProcess.stderr.on('data', (data: string) => {
     const message = data.toString();
@@ -71,8 +74,10 @@ const startSonus = () => {
 };
 
 ipcMain.on('buzz', () => {
-  console.log('buzz!');
-  activateBuzzer();
+  console.log('Starting buzzer...');
+  if (isRPI) {
+    spawn('node', ['./scripts/buzzer.js'], { detached: false });
+  }
 });
 
 if (process.env.NODE_ENV === 'production') {
