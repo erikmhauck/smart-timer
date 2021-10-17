@@ -121,6 +121,7 @@ const createWindow = async () => {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
+    kiosk: process.platform !== 'darwin',
   });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
