@@ -25,6 +25,8 @@ let firstRun = false;
 
 const isRPI = process.platform !== 'darwin';
 
+app.disableHardwareAcceleration();
+
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
