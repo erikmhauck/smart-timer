@@ -3,7 +3,7 @@ import { Button, Flex } from '@fluentui/react-northstar';
 import './App.global.css';
 import Alarm from './components/alarm';
 import Listener from './components/listener';
-import Timer from './components/timer';
+import CircularCountDown from './components/circular-countdown';
 import { parseDuration, getTimerText } from './time-utils';
 
 const secondsToAlarm = 2;
@@ -95,7 +95,7 @@ export default function App() {
         test
       </Button>
       <Alarm alarming={alarming} />
-      <Timer
+      <CircularCountDown
         totalTime={totalTime}
         currentTime={currentTime}
         textToDisplay={timerTextToDisplay}
