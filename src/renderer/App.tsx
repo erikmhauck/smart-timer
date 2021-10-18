@@ -1,10 +1,9 @@
 import React from 'react';
 import { Button, Flex } from '@fluentui/react-northstar';
 import './App.global.css';
-import Alarm from './components/alarm';
 import Listener from './components/listener';
-import CircularCountDown from './components/circular-countdown';
 import { parseDuration, getTimerText } from './time-utils';
+import Timer from './components/timer';
 
 const secondsToAlarm = 2;
 
@@ -47,6 +46,7 @@ export default function App() {
   const [currentTime, setCurrentTime] = React.useState(0);
   const [alarming, setAlarming] = React.useState(false);
   const [timerTextToDisplay, setTimerTextToDisplay] = React.useState('');
+  // const [timers, setTimers] = React.useState<typeof Timer[]>([]);
 
   React.useEffect(() => {
     window.electron.ipcRenderer.on('hotword', (data: any) => {
@@ -94,8 +94,8 @@ export default function App() {
       >
         test
       </Button>
-      <Alarm alarming={alarming} />
-      <CircularCountDown
+      <Timer
+        alarming={alarming}
         totalTime={totalTime}
         currentTime={currentTime}
         textToDisplay={timerTextToDisplay}
