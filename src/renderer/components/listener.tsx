@@ -7,9 +7,9 @@ interface IListenerProps {
 }
 export default function Listener({ listening, currentSpeech }: IListenerProps) {
   return (
-    <Flex>
+    <Flex column vAlign="center" hAlign="center">
       <Text>listening: {listening.toString()}</Text>
-      <Text>{currentSpeech}</Text>
+      <Text>current: {currentSpeech}</Text>
     </Flex>
   );
 }

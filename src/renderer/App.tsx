@@ -1,52 +1,33 @@
 import React from 'react';
-import { Button, Flex } from '@fluentui/react-northstar';
+import { Button, Flex, Input } from '@fluentui/react-northstar';
 import './App.global.css';
 import Listener from './components/listener';
-import { parseDuration, getTimerText } from './time-utils';
+import { parseDuration } from './time-utils';
 import Timer from './components/timer';
 
-const secondsToAlarm = 2;
-
-const startAlarm = (setAlarming: (arg0: boolean) => void) => {
-  setAlarming(true);
-  setTimeout(() => {
-    console.log(`alarming is finished`);
-    window.electron.ipcRenderer.buzz();
-    setAlarming(false);
-  }, secondsToAlarm * 1000);
-};
-
-const startTimer = (
-  totalTime: number,
-  setCurrentTime: (arg0: number) => void,
-  setAlarming: (arg0: boolean) => void,
-  setTimerTextToDisplay: (arg0: string) => void
+const handleFinalResults = (
+  data: string,
+  setListening: (arg0: boolean) => void,
+  setCurrentSpeech: (arg0: string) => void,
+  setParsedDurations: (arg0: number[]) => void,
+  parsedDurations: number[]
 ) => {
-  console.log(`starting ${totalTime} second timer`);
-  let currentTime = totalTime;
-  setCurrentTime(currentTime);
-  // start decrementing every second
-  const decrementInterval = setInterval(() => {
-    currentTime -= 1;
-    setCurrentTime(currentTime);
-    setTimerTextToDisplay(getTimerText(currentTime));
-  }, 1000);
-  // stop decrementer after total time
-  setTimeout(() => {
-    clearInterval(decrementInterval);
-    console.log(`${totalTime} timer is finished`);
-    startAlarm(setAlarming);
-  }, totalTime * 1000);
+  setListening(false);
+  setCurrentSpeech(data);
+  if (data === 'cancel') {
+    // TODO: cancel the timers
+    setParsedDurations([]);
+  }
+  const parsedDuration = parseDuration(data);
+  if (parsedDuration) {
+    setParsedDurations([...parsedDurations, parsedDuration]);
+  }
 };
-
 export default function App() {
   const [currentSpeech, setCurrentSpeech] = React.useState('');
   const [listening, setListening] = React.useState(false);
-  const [totalTime, setTotalTime] = React.useState(0);
-  const [currentTime, setCurrentTime] = React.useState(0);
-  const [alarming, setAlarming] = React.useState(false);
-  const [timerTextToDisplay, setTimerTextToDisplay] = React.useState('');
-  // const [timers, setTimers] = React.useState<typeof Timer[]>([]);
+  const [demoSpeech, setDemoSpeech] = React.useState('5 seconds');
+  const [parsedDurations, setParsedDurations] = React.useState<number[]>([]);
 
   React.useEffect(() => {
     window.electron.ipcRenderer.on('hotword', (data: any) => {
@@ -56,51 +37,46 @@ export default function App() {
       setCurrentSpeech(data);
     });
     window.electron.ipcRenderer.on('final-results', (data: any) => {
-      setListening(false);
-      setCurrentSpeech(data);
-      const parsedDuration = parseDuration(data);
-      if (parsedDuration) {
-        setTotalTime(parsedDuration);
-        startTimer(
-          parsedDuration,
-          setCurrentTime,
-          setAlarming,
-          setTimerTextToDisplay
-        );
-      }
+      handleFinalResults(
+        data,
+        setListening,
+        setCurrentSpeech,
+        setParsedDurations,
+        parsedDurations
+      );
     });
     // TODO: how else can i do this without needing this lint exclusion?
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <Flex fill column vAlign="center" hAlign="center">
-      <Button
-        onClick={() => {
-          const data = '1 minute 5 seconds';
-          setListening(false);
-          setCurrentSpeech(data);
-          const parsedDuration = parseDuration(data);
-          if (parsedDuration) {
-            setTotalTime(parsedDuration);
-            startTimer(
-              parsedDuration,
-              setCurrentTime,
-              setAlarming,
-              setTimerTextToDisplay
-            );
-          }
-        }}
-      >
-        test
-      </Button>
-      <Timer
-        alarming={alarming}
-        totalTime={totalTime}
-        currentTime={currentTime}
-        textToDisplay={timerTextToDisplay}
-      />
+    <Flex
+      fill
+      column
+      vAlign="center"
+      hAlign="center"
+      styles={{ minHeight: '100vh' }}
+    >
       <Listener currentSpeech={currentSpeech} listening={listening} />
+      <Input value={demoSpeech} onChange={(_e, d) => setDemoSpeech(d!.value)} />
+      <Button
+        content="send"
+        primary
+        onClick={() => {
+          handleFinalResults(
+            demoSpeech,
+            setListening,
+            setCurrentSpeech,
+            setParsedDurations,
+            parsedDurations
+          );
+        }}
+      />
+      <Flex hAlign="center" fill>
+        {parsedDurations.map((parsedDuration, idx: number) => (
+          <Timer key={idx} totalTime={parsedDuration} />
+        ))}
+      </Flex>
     </Flex>
   );
 }
