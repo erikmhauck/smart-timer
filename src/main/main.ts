@@ -92,7 +92,8 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const isDevelopment =
-  process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
+  !isRPI &&
+  (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true');
 
 if (isDevelopment) {
   require('electron-debug')();
@@ -112,7 +113,7 @@ const installExtensions = async () => {
 };
 
 const createWindow = async () => {
-  if (isDevelopment && !isRPI) {
+  if (isDevelopment) {
     await installExtensions();
   }
 
@@ -131,6 +132,7 @@ const createWindow = async () => {
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      devTools: !isRPI,
     },
     kiosk: process.platform !== 'darwin',
   });
