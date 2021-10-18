@@ -112,7 +112,7 @@ const installExtensions = async () => {
 };
 
 const createWindow = async () => {
-  if (isDevelopment) {
+  if (isDevelopment && !isRPI) {
     await installExtensions();
   }
 
