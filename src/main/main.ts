@@ -78,7 +78,7 @@ const startSonus = () => {
   });
 };
 
-ipcMain.on('buzz', () => {
+const buzz = () => {
   console.log('Starting buzzer...');
   if (isRPI) {
     spawn('node', ['./buzzer.js'], {
@@ -86,6 +86,10 @@ ipcMain.on('buzz', () => {
       cwd: './scripts',
     });
   }
+};
+
+ipcMain.on('buzz', () => {
+  buzz();
 });
 
 ipcMain.on('displayOff', () => {
@@ -204,6 +208,7 @@ app
       startSonus();
     }
     app.on('activate', () => {
+      buzz();
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
       if (mainWindow === null) createWindow();
