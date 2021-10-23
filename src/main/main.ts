@@ -14,7 +14,7 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
+import { spawn, ChildProcessWithoutNullStreams, exec } from 'child_process';
 
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
@@ -55,6 +55,8 @@ const startSonus = () => {
     if (mainWindow) {
       console.log(`sonus: ${message}`);
       if (message.startsWith('!h:')) {
+        // wake screen
+        exec('sudo ./scripts/raspi-monitor.sh on > /dev/null 2>&1');
         mainWindow.webContents.send('hotword', true);
       } else if (message.startsWith('!p:')) {
         mainWindow.webContents.send('partial-results', message.substring(4));
