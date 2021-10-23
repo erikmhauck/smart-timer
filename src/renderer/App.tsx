@@ -1,9 +1,21 @@
 import React from 'react';
-import { Button, Flex, Input } from '@fluentui/react-northstar';
+import { Flex } from '@fluentui/react-northstar';
 import './App.global.css';
 import Listener from './components/listener';
 import { parseDuration } from './time-utils';
 import Timer from './components/timer';
+import SpeechDebugger from './components/speech-debugger';
+
+const debugSpeech = false;
+
+const destroyTimer = (
+  index: number,
+  setParsedDurations: React.Dispatch<React.SetStateAction<number[]>>
+) => {
+  setParsedDurations((prevItems) => {
+    return prevItems.filter((_prevItem, idx) => idx !== index);
+  });
+};
 
 const handleFinalResults = (
   data: string,
@@ -17,10 +29,11 @@ const handleFinalResults = (
   if (data === 'cancel') {
     // TODO: cancel the timers
     setParsedDurations([]);
-  }
-  const parsedDuration = parseDuration(data);
-  if (parsedDuration) {
-    setParsedDurations([...parsedDurations, parsedDuration]);
+  } else {
+    const parsedDuration = parseDuration(data);
+    if (parsedDuration) {
+      setParsedDurations([...parsedDurations, parsedDuration]);
+    }
   }
 };
 export default function App() {
@@ -58,23 +71,23 @@ export default function App() {
       styles={{ minHeight: '100vh' }}
     >
       <Listener currentSpeech={currentSpeech} listening={listening} />
-      <Input value={demoSpeech} onChange={(_e, d) => setDemoSpeech(d!.value)} />
-      <Button
-        content="send"
-        primary
-        onClick={() => {
-          handleFinalResults(
-            demoSpeech,
-            setListening,
-            setCurrentSpeech,
-            setParsedDurations,
-            parsedDurations
-          );
-        }}
+      <SpeechDebugger
+        debugSpeech={debugSpeech}
+        demoSpeech={demoSpeech}
+        setDemoSpeech={setDemoSpeech}
+        handleFinalResults={handleFinalResults}
+        setListening={setListening}
+        setCurrentSpeech={setCurrentSpeech}
+        setParsedDurations={setParsedDurations}
+        parsedDurations={parsedDurations}
       />
       <Flex hAlign="center" fill>
         {parsedDurations.map((parsedDuration, idx: number) => (
-          <Timer key={idx} totalTime={parsedDuration} />
+          <Timer
+            key={idx}
+            totalTime={parsedDuration}
+            destroyCallback={() => destroyTimer(idx, setParsedDurations)}
+          />
         ))}
       </Flex>
     </Flex>

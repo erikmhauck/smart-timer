@@ -6,19 +6,24 @@ import { getTimerText } from '../time-utils';
 
 interface ITimerProps {
   totalTime: number;
+  destroyCallback: any;
 }
 const secondsToAlarm = 2;
 
-const startAlarm = (setAlarming: (arg0: boolean) => void) => {
+const startAlarm = (
+  setAlarming: (arg0: boolean) => void,
+  destroyCallback: any
+) => {
   setAlarming(true);
   setTimeout(() => {
     console.log(`alarming is finished`);
     window.electron.ipcRenderer.buzz();
     setAlarming(false);
+    destroyCallback();
   }, secondsToAlarm * 1000);
 };
 
-export default function Timer({ totalTime }: ITimerProps) {
+export default function Timer({ totalTime, destroyCallback }: ITimerProps) {
   // const [currentTime, setCurrentTime] = React.useState(0);
   const [alarming, setAlarming] = React.useState(false);
   const [timerTextToDisplay, setTimerTextToDisplay] = React.useState(
@@ -30,7 +35,7 @@ export default function Timer({ totalTime }: ITimerProps) {
     const timer = setTimeout(() => {
       const newTime = time - 1;
       if (newTime < 0) {
-        startAlarm(setAlarming);
+        startAlarm(setAlarming, destroyCallback);
       } else {
         setTime(newTime);
         setTimerTextToDisplay(getTimerText(newTime));
@@ -39,7 +44,7 @@ export default function Timer({ totalTime }: ITimerProps) {
     return () => {
       clearTimeout(timer);
     };
-  }, [time, setTimerTextToDisplay]);
+  }, [time, setTimerTextToDisplay, destroyCallback]);
 
   return (
     <Flex column vAlign="center" hAlign="center" fill>
