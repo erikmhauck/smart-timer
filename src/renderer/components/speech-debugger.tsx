@@ -9,7 +9,6 @@ interface ISpeechDebuggerProps {
   setListening: Dispatch<SetStateAction<boolean>>;
   setCurrentSpeech: Dispatch<SetStateAction<string>>;
   setParsedDurations: Dispatch<SetStateAction<number[]>>;
-  parsedDurations: any[];
 }
 export default function SpeechDebugger({
   debugSpeech,
@@ -19,7 +18,6 @@ export default function SpeechDebugger({
   setListening,
   setCurrentSpeech,
   setParsedDurations,
-  parsedDurations,
 }: ISpeechDebuggerProps) {
   return (
     <>
@@ -37,8 +35,7 @@ export default function SpeechDebugger({
                 demoSpeech,
                 setListening,
                 setCurrentSpeech,
-                setParsedDurations,
-                parsedDurations
+                setParsedDurations
               );
             }}
           />

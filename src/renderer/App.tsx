@@ -9,30 +9,28 @@ import SpeechDebugger from './components/speech-debugger';
 const debugSpeech = false;
 
 const destroyTimer = (
-  index: number,
+  duration: number,
   setParsedDurations: React.Dispatch<React.SetStateAction<number[]>>
 ) => {
   setParsedDurations((prevItems) => {
-    return prevItems.filter((_prevItem, idx) => idx !== index);
+    return prevItems.filter((prevItem) => prevItem !== duration);
   });
 };
 
 const handleFinalResults = (
   data: string,
-  setListening: (arg0: boolean) => void,
-  setCurrentSpeech: (arg0: string) => void,
-  setParsedDurations: (arg0: number[]) => void,
-  parsedDurations: number[]
+  setListening: React.Dispatch<React.SetStateAction<boolean>>,
+  setCurrentSpeech: React.Dispatch<React.SetStateAction<string>>,
+  setParsedDurations: React.Dispatch<React.SetStateAction<number[]>>
 ) => {
   setListening(false);
   setCurrentSpeech(data);
   if (data === 'cancel') {
-    // TODO: cancel the timers
     setParsedDurations([]);
   } else {
     const parsedDuration = parseDuration(data);
     if (parsedDuration) {
-      setParsedDurations([...parsedDurations, parsedDuration]);
+      setParsedDurations((prevItems) => [...prevItems, parsedDuration]);
     }
   }
 };
@@ -54,8 +52,7 @@ export default function App() {
         data,
         setListening,
         setCurrentSpeech,
-        setParsedDurations,
-        parsedDurations
+        setParsedDurations
       );
     });
     // TODO: how else can i do this without needing this lint exclusion?
@@ -79,14 +76,15 @@ export default function App() {
         setListening={setListening}
         setCurrentSpeech={setCurrentSpeech}
         setParsedDurations={setParsedDurations}
-        parsedDurations={parsedDurations}
       />
       <Flex hAlign="center" fill>
-        {parsedDurations.map((parsedDuration, idx: number) => (
+        {parsedDurations.map((parsedDuration) => (
           <Timer
-            key={idx}
+            key={parsedDuration}
             totalTime={parsedDuration}
-            destroyCallback={() => destroyTimer(idx, setParsedDurations)}
+            destroyCallback={() =>
+              destroyTimer(parsedDuration, setParsedDurations)
+            }
           />
         ))}
       </Flex>
