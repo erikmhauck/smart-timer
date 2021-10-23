@@ -56,7 +56,7 @@ const startSonus = () => {
       console.log(`sonus: ${message}`);
       if (message.startsWith('!h:')) {
         // wake screen
-        exec('sudo ./scripts/raspi-monitor.sh on > /dev/null 2>&1');
+        exec('vcgencmd display_power 1');
         mainWindow.webContents.send('hotword', true);
       } else if (message.startsWith('!p:')) {
         mainWindow.webContents.send('partial-results', message.substring(4));
