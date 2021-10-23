@@ -7,6 +7,7 @@ declare global {
           listener: (event: Electron.IpcRendererEvent, ...args: any[]) => void
         ) => void;
         buzz: () => void;
+        displayOff: () => void;
       };
     };
   }

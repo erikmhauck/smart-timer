@@ -88,6 +88,11 @@ ipcMain.on('buzz', () => {
   }
 });
 
+ipcMain.on('displayOff', () => {
+  // sleep screen
+  exec('vcgencmd display_power 0');
+});
+
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();

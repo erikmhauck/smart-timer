@@ -8,11 +8,18 @@ import SpeechDebugger from './components/speech-debugger';
 
 const debugSpeech = false;
 
+const secondsAfterAlarmToSleepDisplay = 30;
+
 const destroyTimer = (
   duration: number,
   setParsedDurations: React.Dispatch<React.SetStateAction<number[]>>
 ) => {
   setParsedDurations((prevItems) => {
+    if (prevItems.length === 1) {
+      setTimeout(() => {
+        window.electron.ipcRenderer.displayOff();
+      }, secondsAfterAlarmToSleepDisplay * 1000);
+    }
     return prevItems.filter((prevItem) => prevItem !== duration);
   });
 };

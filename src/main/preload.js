@@ -5,9 +5,13 @@ contextBridge.exposeInMainWorld('electron', {
     buzz() {
       ipcRenderer.send('buzz');
     },
+    displayOff() {
+      ipcRenderer.send('displayOff');
+    },
     on(channel, func) {
       const validChannels = [
         'buzz',
+        'displayOff',
         'hotword',
         'partial-results',
         'final-results',
