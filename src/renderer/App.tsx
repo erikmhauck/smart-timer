@@ -11,10 +11,8 @@ const debugSpeech = false;
 const secondsAfterAlarmToSleepDisplay = 30;
 
 // send buzz on first load
-if (debugSpeech) {
-  window.electron.ipcRenderer.buzz();
-  window.electron.ipcRenderer.displayOff();
-}
+window.electron.ipcRenderer.buzz();
+window.electron.ipcRenderer.displayOff();
 
 const destroyTimer = (
   duration: number,
