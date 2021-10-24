@@ -8,21 +8,38 @@ import SpeechDebugger from './components/speech-debugger';
 
 const debugSpeech = false;
 
-const secondsAfterAlarmToSleepDisplay = 30;
+const secondsAfterAlarmToSleepDisplay = 10;
 
 // send buzz on first load
 window.electron.ipcRenderer.buzz();
 window.electron.ipcRenderer.displayOff();
 
+const createScreenTimeout = (
+  setScreenTimeout: React.Dispatch<
+    React.SetStateAction<NodeJS.Timeout | undefined>
+  >
+) => {
+  const newTimeout = setTimeout(() => {
+    window.electron.ipcRenderer.displayOff();
+  }, secondsAfterAlarmToSleepDisplay * 1000);
+  setScreenTimeout((prevTimeout: NodeJS.Timeout | undefined) => {
+    if (prevTimeout) {
+      clearTimeout(prevTimeout);
+    }
+    return newTimeout;
+  });
+};
+
 const destroyTimer = (
   duration: number,
-  setParsedDurations: React.Dispatch<React.SetStateAction<number[]>>
+  setParsedDurations: React.Dispatch<React.SetStateAction<number[]>>,
+  setScreenTimeout: React.Dispatch<
+    React.SetStateAction<NodeJS.Timeout | undefined>
+  >
 ) => {
   setParsedDurations((prevItems) => {
     if (prevItems.length === 1) {
-      setTimeout(() => {
-        window.electron.ipcRenderer.displayOff();
-      }, secondsAfterAlarmToSleepDisplay * 1000);
+      createScreenTimeout(setScreenTimeout);
     }
     return prevItems.filter((prevItem) => prevItem !== duration);
   });
@@ -32,16 +49,23 @@ const handleFinalResults = (
   data: string,
   setListening: React.Dispatch<React.SetStateAction<boolean>>,
   setCurrentSpeech: React.Dispatch<React.SetStateAction<string>>,
-  setParsedDurations: React.Dispatch<React.SetStateAction<number[]>>
+  parsedDurations: number[],
+  setParsedDurations: React.Dispatch<React.SetStateAction<number[]>>,
+  setScreenTimeout: React.Dispatch<
+    React.SetStateAction<NodeJS.Timeout | undefined>
+  >
 ) => {
   setListening(false);
   setCurrentSpeech(data);
   if (data === 'cancel') {
     setParsedDurations([]);
+    createScreenTimeout(setScreenTimeout);
   } else {
     const parsedDuration = parseDuration(data);
     if (parsedDuration) {
       setParsedDurations((prevItems) => [...prevItems, parsedDuration]);
+    } else if (parsedDurations.length === 0) {
+      createScreenTimeout(setScreenTimeout);
     }
   }
 };
@@ -50,6 +74,7 @@ export default function App() {
   const [listening, setListening] = React.useState(false);
   const [demoSpeech, setDemoSpeech] = React.useState('5 seconds');
   const [parsedDurations, setParsedDurations] = React.useState<number[]>([]);
+  const [, setScreenTimeout] = React.useState<NodeJS.Timeout>();
 
   React.useEffect(() => {
     window.electron.ipcRenderer.on('hotword', (data: any) => {
@@ -63,7 +88,9 @@ export default function App() {
         data,
         setListening,
         setCurrentSpeech,
-        setParsedDurations
+        parsedDurations,
+        setParsedDurations,
+        setScreenTimeout
       );
     });
     // TODO: how else can i do this without needing this lint exclusion?
@@ -94,7 +121,7 @@ export default function App() {
             key={parsedDuration}
             totalTime={parsedDuration}
             destroyCallback={() =>
-              destroyTimer(parsedDuration, setParsedDurations)
+              destroyTimer(parsedDuration, setParsedDurations, setScreenTimeout)
             }
           />
         ))}
