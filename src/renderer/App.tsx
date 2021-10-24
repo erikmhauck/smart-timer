@@ -6,7 +6,7 @@ import { parseDuration } from './time-utils';
 import Timer from './components/timer';
 import SpeechDebugger from './components/speech-debugger';
 
-const debugSpeech = true;
+const debugSpeech = false;
 
 const secondsAfterAlarmToSleepDisplay = 30;
 
