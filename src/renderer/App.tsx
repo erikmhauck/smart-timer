@@ -10,6 +10,12 @@ const debugSpeech = true;
 
 const secondsAfterAlarmToSleepDisplay = 30;
 
+// send buzz on first load
+if (debugSpeech) {
+  window.electron.ipcRenderer.buzz();
+  window.electron.ipcRenderer.displayOff();
+}
+
 const destroyTimer = (
   duration: number,
   setParsedDurations: React.Dispatch<React.SetStateAction<number[]>>

@@ -16,7 +16,6 @@ const startAlarm = (
 ) => {
   setAlarming(true);
   setTimeout(() => {
-    console.log(`alarming is finished`);
     window.electron.ipcRenderer.buzz();
     setAlarming(false);
     destroyCallback();

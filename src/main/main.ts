@@ -145,7 +145,7 @@ const createWindow = async () => {
       preload: path.join(__dirname, 'preload.js'),
       devTools: !isRPI,
     },
-    kiosk: process.platform !== 'darwin',
+    kiosk: isRPI,
   });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
@@ -204,7 +204,6 @@ app
   .then(() => {
     createWindow();
     if (!firstRun) {
-      buzz();
       firstRun = true;
       startSonus();
     }
