@@ -1,6 +1,6 @@
 {
   "name": "smart-timer",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "productName": "SmartTimer",
   "description": "Voice controller timer, electron app",
   "main": "./dist/main/main.js",
