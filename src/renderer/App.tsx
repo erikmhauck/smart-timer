@@ -17,17 +17,22 @@ window.electron.ipcRenderer.displayOff();
 const createScreenTimeout = (
   setScreenTimeout: React.Dispatch<
     React.SetStateAction<NodeJS.Timeout | undefined>
-  >
+  >,
+  parsedDurations: number[]
 ) => {
-  const newTimeout = setTimeout(() => {
-    window.electron.ipcRenderer.displayOff();
-  }, secondsAfterAlarmToSleepDisplay * 1000);
-  setScreenTimeout((prevTimeout: NodeJS.Timeout | undefined) => {
-    if (prevTimeout) {
-      clearTimeout(prevTimeout);
-    }
-    return newTimeout;
-  });
+  if (parsedDurations.length === 0) {
+    console.log('Creating screen timeout');
+    const newTimeout = setTimeout(() => {
+      console.log('turning screen off');
+      window.electron.ipcRenderer.displayOff();
+    }, secondsAfterAlarmToSleepDisplay * 1000);
+    setScreenTimeout((prevTimeout: NodeJS.Timeout | undefined) => {
+      if (prevTimeout) {
+        clearTimeout(prevTimeout);
+      }
+      return newTimeout;
+    });
+  }
 };
 
 const destroyTimer = (
@@ -38,10 +43,11 @@ const destroyTimer = (
   >
 ) => {
   setParsedDurations((prevItems) => {
-    if (prevItems.length === 1) {
-      createScreenTimeout(setScreenTimeout);
-    }
-    return prevItems.filter((prevItem) => prevItem !== duration);
+    const remainingParsedDurations = prevItems.filter(
+      (prevItem) => prevItem !== duration
+    );
+    createScreenTimeout(setScreenTimeout, remainingParsedDurations);
+    return remainingParsedDurations;
   });
 };
 
@@ -49,7 +55,6 @@ const handleFinalResults = (
   data: string,
   setListening: React.Dispatch<React.SetStateAction<boolean>>,
   setCurrentSpeech: React.Dispatch<React.SetStateAction<string>>,
-  parsedDurations: number[],
   setParsedDurations: React.Dispatch<React.SetStateAction<number[]>>,
   setScreenTimeout: React.Dispatch<
     React.SetStateAction<NodeJS.Timeout | undefined>
@@ -59,14 +64,15 @@ const handleFinalResults = (
   setCurrentSpeech(data);
   if (data === 'cancel') {
     setParsedDurations([]);
-    createScreenTimeout(setScreenTimeout);
   } else {
     const parsedDuration = parseDuration(data);
-    if (parsedDuration) {
-      setParsedDurations((prevItems) => [...prevItems, parsedDuration]);
-    } else if (parsedDurations.length === 0) {
-      createScreenTimeout(setScreenTimeout);
-    }
+    setParsedDurations((prevItems) => {
+      if (!parsedDuration) {
+        createScreenTimeout(setScreenTimeout, prevItems);
+        return prevItems;
+      }
+      return [...prevItems, parsedDuration];
+    });
   }
 };
 export default function App() {
@@ -79,6 +85,7 @@ export default function App() {
   React.useEffect(() => {
     window.electron.ipcRenderer.on('hotword', (data: any) => {
       setListening(data);
+      setCurrentSpeech('');
     });
     window.electron.ipcRenderer.on('partial-results', (data: any) => {
       setCurrentSpeech(data);
@@ -88,7 +95,6 @@ export default function App() {
         data,
         setListening,
         setCurrentSpeech,
-        parsedDurations,
         setParsedDurations,
         setScreenTimeout
       );
