@@ -62,7 +62,7 @@ const handleFinalResults = (
 ) => {
   setListening(false);
   setCurrentSpeech(data);
-  if (data === 'cancel') {
+  if (data.indexOf('cancel') !== -1) {
     setParsedDurations([]);
   } else {
     const parsedDuration = parseDuration(data);
