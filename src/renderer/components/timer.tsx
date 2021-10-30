@@ -33,7 +33,7 @@ export default function Timer({ totalTime, destroyCallback }: ITimerProps) {
   React.useEffect(() => {
     const timer = setTimeout(() => {
       const newTime = time - 1;
-      if (newTime < 1) {
+      if (newTime < 0) {
         startAlarm(setAlarming, destroyCallback);
       } else {
         setTime(newTime);
