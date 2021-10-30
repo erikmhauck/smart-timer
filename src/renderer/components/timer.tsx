@@ -8,15 +8,15 @@ interface ITimerProps {
   totalTime: number;
   destroyCallback: any;
 }
-const secondsToAlarm = 2;
+const secondsToAlarm = 10;
 
 const startAlarm = (
   setAlarming: (arg0: boolean) => void,
   destroyCallback: any
 ) => {
   setAlarming(true);
+  window.electron.ipcRenderer.buzz();
   setTimeout(() => {
-    window.electron.ipcRenderer.buzz();
     setAlarming(false);
     destroyCallback();
   }, secondsToAlarm * 1000);
