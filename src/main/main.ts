@@ -81,8 +81,7 @@ const startSonus = () => {
 const buzz = () => {
   console.log('Starting buzzer...');
   if (isRPI) {
-    spawn('node', ['./buzzer.js'], {
-      detached: false,
+    exec('node ./buzzer.js', {
       cwd: './scripts',
     });
   }
