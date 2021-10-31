@@ -45,7 +45,7 @@ export default function Timer({ totalTime, destroyCallback }: ITimerProps) {
 
   return (
     <Flex column vAlign="center" hAlign="center" fill>
-      <Text color="white">total time: {totalTime}</Text>
+      <Text>total time: {totalTime}</Text>
       <CircularCountDown
         totalTime={totalTime}
         currentTime={time}

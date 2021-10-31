@@ -5,7 +5,9 @@ export default function Clock() {
   const [currentTime, setCurrentTime] = React.useState(new Date());
 
   const hours = currentTime.getHours() % 12 || 12;
-  const mins = currentTime.getMinutes();
+  const mins =
+    (currentTime.getMinutes() < 10 ? '0' : '') + currentTime.getMinutes();
+
   React.useEffect(() => {
     setInterval(() => {
       setCurrentTime(new Date());
@@ -13,12 +15,7 @@ export default function Clock() {
   }, []);
   return (
     <Flex column vAlign="center" hAlign="center">
-      <Header
-        color="white"
-        styles={{ fontSize: '3rem' }}
-        as="h1"
-        content={`${hours}:${mins}`}
-      />
+      <Header styles={{ fontSize: '3rem' }} content={`${hours}:${mins}`} />
     </Flex>
   );
 }

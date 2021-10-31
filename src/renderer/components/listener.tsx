@@ -11,7 +11,7 @@ export default function Listener({ listening, currentSpeech }: IListenerProps) {
       {listening && (
         <Flex column vAlign="center" hAlign="center">
           <Loader />
-          <Text size="largest" color="white">{currentSpeech}</Text>
+          <Text size="largest">{currentSpeech}</Text>
         </Flex>
       )}
     </>

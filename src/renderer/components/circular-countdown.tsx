@@ -21,7 +21,7 @@ export default function CircularCountDown({
         text={`${textToDisplay}`}
         minValue={0}
         maxValue={totalTime}
-        styles={buildStyles({ textColor: 'white' })}
+        styles={buildStyles({ textColor: 'black' })}
       />
     </Flex>
   );

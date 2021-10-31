@@ -110,7 +110,7 @@ export default function App() {
       column
       vAlign="center"
       hAlign="center"
-      styles={{ minHeight: '100vh', backgroundColor: 'black' }}
+      styles={{ minHeight: '100vh' }}
     >
       <Flex vAlign="start" hAlign="center" fill>
         <Clock />
