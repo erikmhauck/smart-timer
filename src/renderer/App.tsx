@@ -5,6 +5,7 @@ import Listener from './components/listener';
 import { parseDuration } from './time-utils';
 import Timer from './components/timer';
 import SpeechDebugger from './components/speech-debugger';
+import Clock from './components/clock';
 
 const debugSpeech = false;
 
@@ -109,8 +110,11 @@ export default function App() {
       column
       vAlign="center"
       hAlign="center"
-      styles={{ minHeight: '100vh' }}
+      styles={{ minHeight: '100vh', backgroundColor: 'black' }}
     >
+      <Flex vAlign="start" hAlign="center" fill>
+        <Clock />
+      </Flex>
       <Listener currentSpeech={currentSpeech} listening={listening} />
       <SpeechDebugger
         debugSpeech={debugSpeech}

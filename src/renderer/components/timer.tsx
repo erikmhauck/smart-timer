@@ -1,6 +1,5 @@
 import { Flex, Text } from '@fluentui/react-northstar';
 import React from 'react';
-import Alarm from './alarm';
 import CircularCountDown from './circular-countdown';
 import { getTimerText } from '../time-utils';
 
@@ -23,8 +22,7 @@ const startAlarm = (
 };
 
 export default function Timer({ totalTime, destroyCallback }: ITimerProps) {
-  // const [currentTime, setCurrentTime] = React.useState(0);
-  const [alarming, setAlarming] = React.useState(false);
+  const [, setAlarming] = React.useState(false);
   const [timerTextToDisplay, setTimerTextToDisplay] = React.useState(
     getTimerText(totalTime)
   );
@@ -47,8 +45,7 @@ export default function Timer({ totalTime, destroyCallback }: ITimerProps) {
 
   return (
     <Flex column vAlign="center" hAlign="center" fill>
-      <Alarm alarming={alarming} />
-      <Text>total time: {totalTime}</Text>
+      <Text color="white">total time: {totalTime}</Text>
       <CircularCountDown
         totalTime={totalTime}
         currentTime={time}
