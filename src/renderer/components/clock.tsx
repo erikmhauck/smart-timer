@@ -15,7 +15,7 @@ export default function Clock() {
     <Flex column vAlign="center" hAlign="center">
       <Header
         color="white"
-        styles={{ fontSize: '5rem' }}
+        styles={{ fontSize: '3rem' }}
         as="h1"
         content={`${hours}:${mins}`}
       />
