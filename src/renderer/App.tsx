@@ -84,8 +84,8 @@ export default function App() {
   const [, setScreenTimeout] = React.useState<NodeJS.Timeout>();
 
   React.useEffect(() => {
-    window.electron.ipcRenderer.on('hotword', (data: any) => {
-      setListening(data);
+    window.electron.ipcRenderer.on('hotword', (_data: any) => {
+      setListening(true);
       setCurrentSpeech('');
     });
     window.electron.ipcRenderer.on('partial-results', (data: any) => {
@@ -113,9 +113,8 @@ export default function App() {
       styles={{ minHeight: '100vh' }}
     >
       <Flex vAlign="start" hAlign="center" fill>
-        <Clock />
+        {listening ? <Listener currentSpeech={currentSpeech} /> : <Clock />}
       </Flex>
-      <Listener currentSpeech={currentSpeech} listening={listening} />
       <SpeechDebugger
         debugSpeech={debugSpeech}
         demoSpeech={demoSpeech}
@@ -125,7 +124,7 @@ export default function App() {
         setCurrentSpeech={setCurrentSpeech}
         setParsedDurations={setParsedDurations}
       />
-      <Flex hAlign="center" fill>
+      <Flex hAlign="center" fill gap="gap.small">
         {parsedDurations.map((parsedDuration) => (
           <Timer
             key={parsedDuration}
